@@ -10,9 +10,10 @@ import (
 	"github.com/zYasser/Go-RestAPI/internal/database"
 )
 
-func  (apiConfig *apiConfig)handlerCreateUser(w http.ResponseWriter, r *http.Request) {
+func  (apiConfig *apiConfig)handlerCreateFeed(w http.ResponseWriter, r *http.Request , user database.User ) {
 	type parameters struct{
 		Name string `json:"name"`
+		URL string `json:"url"`
 	}
 	decoder :=json.NewDecoder(r.Body)
 	params:=parameters{}
@@ -21,23 +22,19 @@ func  (apiConfig *apiConfig)handlerCreateUser(w http.ResponseWriter, r *http.Req
 		respondWithError(w,400,fmt.Sprintf("Error parsing JSON %s", err))
 		return 
 	}
-	user , err := apiConfig.DB.CreateUser(r.Context(),database.CreateUserParams{
+	feed , err := apiConfig.DB.CreateFeed(r.Context(),database.CreateFeedParams{
 		ID: uuid.New(),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 		Name: params.Name,
+		UserID: user.ID,
+		Url: params.URL,
 	})
 	if err !=nil{
 		respondWithError(w,400,fmt.Sprintf("Couldn't create user %s", err))
 
 	}
-	respondWithJSON(w, http.StatusCreated, databaseUserToUserModel(user)	)
+	respondWithJSON(w, http.StatusCreated, databaseFeedToFeedModel(feed))
 }
 
 
-
-func  (apiConfig *apiConfig)handlerGetUserByApiKey(w http.ResponseWriter, r *http.Request, user database.User) {
-
-	respondWithJSON(w,200,databaseUserToUserModel(user))
-
-}
