@@ -37,4 +37,15 @@ func  (apiConfig *apiConfig)handlerCreateFeed(w http.ResponseWriter, r *http.Req
 	respondWithJSON(w, http.StatusCreated, databaseFeedToFeedModel(feed))
 }
 
+func  (apiConfig *apiConfig)handlerGetAllFeeds(w http.ResponseWriter, r *http.Request){
+	
+	feeds , err :=apiConfig.DB.GetFeeds(r.Context())
+	if err !=nil{
+		respondWithError(w,404,fmt.Sprintf("There's no feed available %s", err))
+
+	}
+	respondWithJSON(w, http.StatusCreated, databaseFeedsToFeedModel(feeds))
+}
+
+
 

@@ -44,4 +44,21 @@ func databaseFeedToFeedModel(feed database.Feed) Feed{
 		Url: feed.Url,
 		UserID:feed.UserID,
 	}
+
+}
+func databaseFeedsToFeedModel(feeds []database.Feed) []Feed {
+	result := make([]Feed, len(feeds))
+
+	for i, feed := range feeds {
+		result[i] = Feed{
+			ID:        feed.ID,
+			CreatedAt: feed.CreatedAt,
+			UpdatedAt: feed.UpdatedAt,
+			Name:      feed.Name,
+			Url:       feed.Url,
+			UserID:    feed.UserID,
+		}
+	}
+
+	return result
 }

@@ -57,6 +57,8 @@ func main() {
 	v1Router.Post("/users" , apiCfg.handlerCreateUser)
 	v1Router.Get("/users" , apiCfg.middlewareAuth(apiCfg.handlerGetUserByApiKey))
 	v1Router.Post("/feed" , apiCfg.middlewareAuth(apiCfg.handlerCreateFeed))
+	v1Router.Get("/feed" , apiCfg.handlerGetAllFeeds)
+
 
 	router.Mount("/v1" , v1Router)
 	log.Printf("Server Running At Port %s", portString)
