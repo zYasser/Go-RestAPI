@@ -10,7 +10,7 @@ import (
 	"github.com/zYasser/Go-RestAPI/internal/database"
 )
 
-func  (apiConfig *apiConfig)hnadlerFollowFeed(w http.ResponseWriter, r *http.Request , user database.User ) {
+func  (apiConfig *apiConfig)handlerFollowFeed(w http.ResponseWriter, r *http.Request , user database.User ) {
 	type parameters struct{
 		Feed_id uuid.UUID `json:"feed_id"`
 	}
@@ -38,4 +38,15 @@ func  (apiConfig *apiConfig)hnadlerFollowFeed(w http.ResponseWriter, r *http.Req
 
 
 
+
+
+func  (apiConfig *apiConfig)handlerGetFollowedFeedByUser(w http.ResponseWriter, r *http.Request , user database.User ) {
+
+	follow_feeds , err := apiConfig.DB.GetFeedFollowsByUser(r.Context(),user.ID)
+	if err !=nil{
+		respondWithError(w,400,fmt.Sprintf("Couldn't create user %s", err))
+
+	}
+	respondWithJSON(w, http.StatusOK, databaseFollowFeedsToListModel(follow_feeds ,user))
+}
 

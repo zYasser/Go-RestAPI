@@ -6,15 +6,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/zYasser/Go-RestAPI/internal/database"
 )
-
-type User struct {
-	ID        uuid.UUID `json:"id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Name      string `json:"name"`
-	APIKey string `json:"api_key"`
-}
-
 type Feed struct {
 	ID        uuid.UUID `json:"id"`
 	CreatedAt time.Time `json:"created_at"`
@@ -23,6 +14,15 @@ type Feed struct {
 	Url       string `json:"URL"`
 	UserID    uuid.UUID `json:"user_id"`
 }
+type User struct {
+	ID        uuid.UUID `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Name      string `json:"name"`
+	APIKey string `json:"api_key"`
+}
+
+
 
 type Follow_Feed struct {
 	ID        uuid.UUID `json:"id"`
@@ -31,6 +31,12 @@ type Follow_Feed struct {
 	UserID    uuid.UUID `json:"user_id"`
 	FeedId    uuid.UUID `json:"feed_id"`
 
+}
+
+
+type Follow_Feed_List struct {
+	User 
+	Feeds []Follow_Feed `json:"feeds"`
 }
 
 
@@ -80,4 +86,23 @@ func databaseFollowFeedsToModel(followFeeds database.FeedFollow) Follow_Feed{
 		FeedId: followFeeds.FeedID,
 
 	}
+}
+func databaseFollowFeedsToListModel(followFeeds []database.FeedFollow , user database.User) Follow_Feed_List{
+	result := make([]Follow_Feed , len(followFeeds))
+	for i , followFeed := range followFeeds {
+		result[i]=Follow_Feed{
+			ID:followFeed.ID,
+			CreatedAt: followFeed.CreatedAt,
+			UpdatedAt: followFeed.UpdatedAt,
+			UserID:followFeed.UserID,
+			FeedId: followFeed.FeedID,
+	
+		}
+	}
+	
+	return Follow_Feed_List{
+		User:databaseUserToUserModel(user),
+		Feeds: result,
+
+	} 
 }
